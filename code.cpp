@@ -21,7 +21,9 @@ int main()
     vector<vector<int>> v(n, vector<int>(n, 0));
     srand(time(0));
     cout << "Welcome to the 2048 Game!" << endl;
-    printMatrix(v, n);
+    i = rand() % n;
+    j = rand() % n;
+    v[i][j] = 2;
     i = rand() % n;
     j = rand() % n;
     v[i][j] = 2;
