@@ -46,6 +46,25 @@ void moveUp(vector<vector<int>> &v, int n)
         }
     }
 }
+void moveDown(vector<vector<int>> &v, int n)
+{
+    for (int j = 0; j < n; j++)
+    {
+        int currPos = n - 1;
+        for (int i = n - 1; i >= 0; i--)
+        {
+            if (v[i][j] != 0)
+            {
+                v[currPos][j] = v[i][j];
+                currPos--;
+            }
+        }
+        for (int i = 0; i <= currPos; i++)
+        {
+            v[i][j] = 0;
+        }
+    }
+}
 void moveLeft(vector<vector<int>> &v, int n)
 {
     for (int i = 0; i < n; i++)
@@ -105,7 +124,7 @@ int main()
             moveUp(v, n);
             break;
         case 'd':
-            //Move Down Code
+            moveDown(v, n);
             break;
         case 'l':
             moveLeft(v, n);
