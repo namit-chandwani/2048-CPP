@@ -46,7 +46,25 @@ void moveLeft(vector<vector<int>> &v, int n)
         }
     }
 }
-
+void moveRight(vector<vector<int>> &v, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        int currPos = n - 1;
+        for (int j = n - 1; j >= 0; j--)
+        {
+            if (v[i][j] != 0)
+            {
+                v[i][currPos] = v[i][j];
+                currPos--;
+            }
+        }
+        for (int j = 0; j <= currPos; j++)
+        {
+            v[i][j] = 0;
+        }
+    }
+}
 int main()
 {
     int n = 4, i, j, empty;
@@ -71,10 +89,10 @@ int main()
             //Move Down Code
             break;
         case 'l':
-            // Move Left Code
+            moveLeft(v, n);
             break;
         case 'r':
-            // Move Right Code
+            moveRight(v, n);
             break;
         default:
             cout << "Invalid move. Try again!" << endl;
