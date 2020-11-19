@@ -27,6 +27,26 @@ void addTile(vector<vector<int>> &v, int n, int &empty)
     empty--;
 }
 
+void moveLeft(vector<vector<int>> &v, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        int currPos = 0;
+        for (int j = 0; j < n; j++)
+        {
+            if (v[i][j] != 0)
+            {
+                v[i][currPos] = v[i][j];
+                currPos++;
+            }
+        }
+        for (int j = currPos; j < n; j++)
+        {
+            v[i][j] = 0;
+        }
+    }
+}
+
 int main()
 {
     int n = 4, i, j, empty;
