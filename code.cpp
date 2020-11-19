@@ -14,6 +14,16 @@ void printMatrix(vector<vector<int>> &v, int n)
     }
     cout << endl;
 }
+void addTile(vector<vector<int>> &v, int n)
+{
+    int i, j;
+    do
+    {
+        i = rand() % n;
+        j = rand() % n;
+    } while (v[i][j] != 0);
+    v[i][j] = 2;
+}
 
 int main()
 {
@@ -21,12 +31,8 @@ int main()
     vector<vector<int>> v(n, vector<int>(n, 0));
     srand(time(0));
     cout << "Welcome to the 2048 Game!" << endl;
-    i = rand() % n;
-    j = rand() % n;
-    v[i][j] = 2;
-    i = rand() % n;
-    j = rand() % n;
-    v[i][j] = 2;
+    addTile(v, n);
+    addTile(v, n);
     printMatrix(v, n);
 
     return 0;
