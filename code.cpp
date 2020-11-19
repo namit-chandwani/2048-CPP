@@ -2,7 +2,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-void printMatrix(vector<vector<int>> &v, int n)
+void printMatrix(vector<vector<int>> &v, int n, int &empty)
 {
     for (int i = 0; i < n; i++)
     {
@@ -13,8 +13,9 @@ void printMatrix(vector<vector<int>> &v, int n)
         cout << endl;
     }
     cout << endl;
+    cout << "No. of empty cells: " << empty << endl;
 }
-void addTile(vector<vector<int>> &v, int n)
+void addTile(vector<vector<int>> &v, int n, int &empty)
 {
     int i, j;
     do
@@ -23,17 +24,45 @@ void addTile(vector<vector<int>> &v, int n)
         j = rand() % n;
     } while (v[i][j] != 0);
     v[i][j] = 2;
+    empty--;
 }
 
 int main()
 {
-    int n = 4, i, j;
-    vector<vector<int>> v(n, vector<int>(n, 0));
+    int n = 4, i, j, empty;
+    char move;
+    empty = n * n;
     srand(time(0));
-    cout << "Welcome to the 2048 Game!" << endl;
-    addTile(v, n);
-    addTile(v, n);
-    printMatrix(v, n);
-
+    vector<vector<int>> v(n, vector<int>(n, 0));
+    printMatrix(v, n, empty);
+    addTile(v, n, empty);
+    addTile(v, n, empty);
+    printMatrix(v, n, empty);
+    while (empty != 0)
+    {
+        cout << "Enter move: (u: UP, d: DOWN, l: LEFT, r: RIGHT)" << endl;
+        cin >> move;
+        switch (move)
+        {
+        case 'u':
+            //Move Up Code
+            break;
+        case 'd':
+            //Move Down Code
+            break;
+        case 'l':
+            // Move Left Code
+            break;
+        case 'r':
+            // Move Right Code
+            break;
+        default:
+            cout << "Invalid move. Try again!" << endl;
+            continue;
+        }
+        addTile(v, n, empty);
+        printMatrix(v, n, empty);
+    }
+    cout << "Game over" << endl;
     return 0;
 }
