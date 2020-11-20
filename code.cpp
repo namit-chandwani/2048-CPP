@@ -112,7 +112,7 @@ void mergeUp(vector<vector<int>> &v, int n, int &empty)
 {
     for (int j = 0; j < n; j++)
     {
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < n - 1; i++)
         {
             if (v[i][j] != 0 && v[i][j] == v[i + 1][j])
             {
@@ -131,7 +131,7 @@ void mergeDown(vector<vector<int>> &v, int n, int &empty)
 {
     for (int j = 0; j < n; j++)
     {
-        for (int i = n - 1; i >= 0; i--)
+        for (int i = n - 1; i > 0; i--)
         {
             if (v[i][j] != 0 && v[i][j] == v[i - 1][j])
             {
@@ -146,11 +146,12 @@ void mergeDown(vector<vector<int>> &v, int n, int &empty)
         }
     }
 }
+
 void mergeLeft(vector<vector<int>> &v, int n, int &empty)
 {
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < n; j++)
+        for (int j = 0; j < n - 1; j++)
         {
             if (v[i][j] != 0 && v[i][j] == v[i][j + 1])
             {
@@ -165,7 +166,25 @@ void mergeLeft(vector<vector<int>> &v, int n, int &empty)
         }
     }
 }
-
+void mergeRight(vector<vector<int>> &v, int n, int &empty)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = n - 1; j > 0; j--)
+        {
+            if (v[i][j] != 0 && v[i][j] == v[i][j - 1])
+            {
+                v[i][j] *= 2;
+                for (int k = j - 1; k > 0; k--)
+                {
+                    v[i][k] = v[i][k - 1];
+                }
+                v[i][0] = 0;
+                empty++;
+            }
+        }
+    }
+}
 int main()
 {
     int n = 4, i, j, empty;
@@ -199,6 +218,7 @@ int main()
             break;
         case 'r':
             moveRight(v, n);
+            mergeRight(v, n, empty);
             break;
         default:
             cout << "Invalid move. Try again!" << endl;
