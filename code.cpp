@@ -8,12 +8,17 @@ void printMatrix(vector<vector<int>> &v, int n, int &empty)
     {
         for (int j = 0; j < n; j++)
         {
+            if (v[i][j] == 0)
+            {
+                cout << "* ";
+                continue;
+            }
             cout << v[i][j] << " ";
         }
         cout << endl;
     }
     cout << endl;
-    cout << "No. of empty cells: " << empty << endl;
+    // cout << "No. of empty cells: " << empty << endl;
 }
 void addTile(vector<vector<int>> &v, int n, int &empty)
 {
@@ -26,7 +31,6 @@ void addTile(vector<vector<int>> &v, int n, int &empty)
     v[i][j] = 2;
     empty--;
 }
-
 void moveUp(vector<vector<int>> &v, int n)
 {
     for (int j = 0; j < n; j++)
@@ -110,7 +114,8 @@ int main()
     empty = n * n;
     srand(time(0));
     vector<vector<int>> v(n, vector<int>(n, 0));
-    printMatrix(v, n, empty);
+    cout << "Welcome to the 2048 Game!\n"
+         << endl;
     addTile(v, n, empty);
     addTile(v, n, empty);
     printMatrix(v, n, empty);
@@ -118,6 +123,7 @@ int main()
     {
         cout << "Enter move: (u: UP, d: DOWN, l: LEFT, r: RIGHT)" << endl;
         cin >> move;
+        cout << endl;
         switch (move)
         {
         case 'u':
