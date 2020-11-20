@@ -22,13 +22,14 @@ void printMatrix(vector<vector<int>> &v, int n, int &empty)
 }
 void addTile(vector<vector<int>> &v, int n, int &empty)
 {
-    int i, j;
+    int i, j, k;
     do
     {
         i = rand() % n;
         j = rand() % n;
     } while (v[i][j] != 0);
-    v[i][j] = 2;
+    k = rand() % 2;
+    v[i][j] = k == 0 ? 2 : 4;
     empty--;
 }
 void moveUp(vector<vector<int>> &v, int n)
@@ -108,7 +109,7 @@ void moveRight(vector<vector<int>> &v, int n)
     }
 }
 
-void mergeUp(vector<vector<int>> &v, int n, int &empty)
+void mergeUp(vector<vector<int>> &v, int n, int &empty, int &maxScore)
 {
     for (int j = 0; j < n; j++)
     {
@@ -117,6 +118,7 @@ void mergeUp(vector<vector<int>> &v, int n, int &empty)
             if (v[i][j] != 0 && v[i][j] == v[i + 1][j])
             {
                 v[i][j] *= 2;
+                maxScore = max(maxScore, v[i][j]);
                 for (int k = i + 1; k < n - 1; k++)
                 {
                     v[k][j] = v[k + 1][j];
@@ -127,7 +129,7 @@ void mergeUp(vector<vector<int>> &v, int n, int &empty)
         }
     }
 }
-void mergeDown(vector<vector<int>> &v, int n, int &empty)
+void mergeDown(vector<vector<int>> &v, int n, int &empty, int &maxScore)
 {
     for (int j = 0; j < n; j++)
     {
@@ -136,6 +138,7 @@ void mergeDown(vector<vector<int>> &v, int n, int &empty)
             if (v[i][j] != 0 && v[i][j] == v[i - 1][j])
             {
                 v[i][j] *= 2;
+                maxScore = max(maxScore, v[i][j]);
                 for (int k = i - 1; k > 0; k--)
                 {
                     v[k][j] = v[k - 1][j];
@@ -147,7 +150,7 @@ void mergeDown(vector<vector<int>> &v, int n, int &empty)
     }
 }
 
-void mergeLeft(vector<vector<int>> &v, int n, int &empty)
+void mergeLeft(vector<vector<int>> &v, int n, int &empty, int &maxScore)
 {
     for (int i = 0; i < n; i++)
     {
@@ -156,6 +159,7 @@ void mergeLeft(vector<vector<int>> &v, int n, int &empty)
             if (v[i][j] != 0 && v[i][j] == v[i][j + 1])
             {
                 v[i][j] *= 2;
+                maxScore = max(maxScore, v[i][j]);
                 for (int k = j + 1; k < n - 1; k++)
                 {
                     v[i][k] = v[i][k + 1];
@@ -166,7 +170,7 @@ void mergeLeft(vector<vector<int>> &v, int n, int &empty)
         }
     }
 }
-void mergeRight(vector<vector<int>> &v, int n, int &empty)
+void mergeRight(vector<vector<int>> &v, int n, int &empty, int &maxScore)
 {
     for (int i = 0; i < n; i++)
     {
@@ -175,6 +179,7 @@ void mergeRight(vector<vector<int>> &v, int n, int &empty)
             if (v[i][j] != 0 && v[i][j] == v[i][j - 1])
             {
                 v[i][j] *= 2;
+                maxScore = max(maxScore, v[i][j]);
                 for (int k = j - 1; k > 0; k--)
                 {
                     v[i][k] = v[i][k - 1];
@@ -187,7 +192,7 @@ void mergeRight(vector<vector<int>> &v, int n, int &empty)
 }
 int main()
 {
-    int n = 4, i, j, empty;
+    int n = 4, i, j, empty, maxScore = 0, flag = 0;
     char move;
     empty = n * n;
     srand(time(0));
@@ -199,6 +204,12 @@ int main()
     printMatrix(v, n, empty);
     while (empty != 0)
     {
+        if (maxScore == 2048)
+        {
+            cout << "Congrats! You have won this game." << endl;
+            flag = 1;
+            break;
+        }
         cout << "Enter move: (u: UP, d: DOWN, l: LEFT, r: RIGHT)" << endl;
         cin >> move;
         cout << endl;
@@ -206,19 +217,19 @@ int main()
         {
         case 'u':
             moveUp(v, n);
-            mergeUp(v, n, empty);
+            mergeUp(v, n, empty, maxScore);
             break;
         case 'd':
             moveDown(v, n);
-            mergeDown(v, n, empty);
+            mergeDown(v, n, empty, maxScore);
             break;
         case 'l':
             moveLeft(v, n);
-            mergeLeft(v, n, empty);
+            mergeLeft(v, n, empty, maxScore);
             break;
         case 'r':
             moveRight(v, n);
-            mergeRight(v, n, empty);
+            mergeRight(v, n, empty, maxScore);
             break;
         default:
             cout << "Invalid move. Try again!" << endl;
@@ -227,6 +238,9 @@ int main()
         addTile(v, n, empty);
         printMatrix(v, n, empty);
     }
-    cout << "Game over" << endl;
+    if (!flag)
+    {
+        cout << "Game over! Your score is: " << maxScore << endl;
+    }
     return 0;
 }
