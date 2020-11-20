@@ -146,6 +146,25 @@ void mergeDown(vector<vector<int>> &v, int n, int &empty)
         }
     }
 }
+void mergeLeft(vector<vector<int>> &v, int n, int &empty)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (v[i][j] != 0 && v[i][j] == v[i][j + 1])
+            {
+                v[i][j] *= 2;
+                for (int k = j + 1; k < n - 1; k++)
+                {
+                    v[i][k] = v[i][k + 1];
+                }
+                v[i][n - 1] = 0;
+                empty++;
+            }
+        }
+    }
+}
 
 int main()
 {
@@ -176,6 +195,7 @@ int main()
             break;
         case 'l':
             moveLeft(v, n);
+            mergeLeft(v, n, empty);
             break;
         case 'r':
             moveRight(v, n);
