@@ -1,26 +1,9 @@
 #include <iostream>
 #include <bits/stdc++.h>
+#include <unistd.h>
 using namespace std;
 
-void printMatrix(vector<vector<int>> &v, int n, int &empty)
-{
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            if (v[i][j] == 0)
-            {
-                cout << "* ";
-                continue;
-            }
-            cout << v[i][j] << " ";
-        }
-        cout << endl;
-    }
-    cout << endl;
-    // cout << "No. of empty cells: " << empty << endl;
-}
-void addTile(vector<vector<int>> &v, int n, int &empty)
+void addTile(vector<vector<int>> &v, int n, int &empty, int &sum)
 {
     int i, j, k;
     do
@@ -30,6 +13,7 @@ void addTile(vector<vector<int>> &v, int n, int &empty)
     } while (v[i][j] != 0);
     k = rand() % 2;
     v[i][j] = k == 0 ? 2 : 4;
+    sum += v[i][j];
     empty--;
 }
 void moveUp(vector<vector<int>> &v, int n)
@@ -190,29 +174,122 @@ void mergeRight(vector<vector<int>> &v, int n, int &empty, int &maxScore)
         }
     }
 }
+void printArrow()
+{
+    cout << "                                          __      " << endl;
+    cout << "                                         |..|     " << endl;
+    cout << "                                         |..|     " << endl;
+    cout << "                                         |..|     " << endl;
+    cout << "                                        _|..|_    " << endl;
+    cout << "                                        \\..../    " << endl;
+    cout << "                                         \\../     " << endl;
+    cout << "                                          \\/      " << endl;
+    cout << endl;
+}
+
+void printMatrix(vector<vector<int>> &v, int n, int &sum)
+{
+    cout << "Current State:" << endl;
+    for (int i = 0; i < n; i++)
+    {
+        cout << "                                  -";
+        for (int j = 0; j < n; j++)
+        {
+            // if (i == 0)
+            // {
+            cout << "----";
+            // }
+        }
+        cout << endl;
+        for (int j = 0; j < n; j++)
+        {
+            if (j == 0)
+            {
+                cout << "                                  | ";
+            }
+            if (v[i][j] == 0)
+            {
+                cout << "  | ";
+                continue;
+            }
+            cout << v[i][j] << " | ";
+        }
+        cout << endl;
+    }
+    cout << "                                  -";
+    for (int j = 0; j < n; j++)
+    {
+        cout << "----";
+    }
+    cout << endl;
+
+    cout << "Sum: " << sum << endl;
+    if (sum != 8)
+    {
+        printArrow();
+    }
+}
+void welcomeMessage()
+{
+    cout << "                                            ________________________________________________________ " << endl;
+    cout << "                                           |                                                        |" << endl;
+    cout << "                                           |               Welcome to the 2048 Game!                |" << endl;
+    cout << "                                           |________________________________________________________|" << endl;
+    cout << endl;
+}
+void endMessage()
+{
+    cout << "                                            ___________________________________________________ " << endl;
+    cout << "                                           |                                                   |" << endl;
+    cout << "                                           |   \U0001F389    Congrats! You have won this game.    \U0001F389   |" << endl;
+    cout << "                                           |___________________________________________________|" << endl;
+    cout << endl;
+}
+
 int main()
 {
-    int n = 4, i, j, empty, maxScore = 0, flag = 0;
+    int n = 4, i, empty, maxScore = 0, flag = 0, sum = 0, prevSum = 0, prevEmpty = 0, prevMaxScore = 0;
     char move;
-    empty = n * n;
-    srand(time(0));
     vector<vector<int>> v(n, vector<int>(n, 0));
-    cout << "Welcome to the 2048 Game!\n"
-         << endl;
-    addTile(v, n, empty);
-    addTile(v, n, empty);
-    printMatrix(v, n, empty);
+    stack<vector<vector<int>>> st;
+
+    empty = n * n;
+
+    srand(time(0));
+    welcomeMessage();
+    addTile(v, n, empty, sum);
+    addTile(v, n, empty, sum);
+    printMatrix(v, n, sum);
+
     while (empty != 0)
     {
-        if (maxScore == 2048)
+        st.push(v);
+        if (sum == 8)
         {
-            cout << "Congrats! You have won this game." << endl;
+            endMessage();
             flag = 1;
             break;
         }
-        cout << "Enter move: (u: UP, d: DOWN, l: LEFT, r: RIGHT)" << endl;
-        cin >> move;
+        else if (sum > 8)
+        {
+            cout << "Sum has exceeded 8" << endl;
+            st.pop();
+            v = st.top();
+            cout << "Matrix reverted to previous state. \n"
+                 << endl;
+            printMatrix(st.top(), n, sum);
+            sum = prevSum, empty = prevEmpty, maxScore = prevMaxScore;
+        }
+        // cout << "Enter move: (u: UP, d: DOWN, l: LEFT, r: RIGHT)" << endl;
+        // cin >> move;
+        i = rand() % 4;
+        move = (i == 0) ? 'u' : ((i == 1) ? 'd' : ((i == 2) ? 'l' : 'r'));
+        string moveDir = "";
+        moveDir = (move == 'u') ? "UP" : ((move == 'd') ? "DOWN" : ((move == 'l') ? "LEFT" : "RIGHT"));
+        cout << "The move is: " << move << " (" << moveDir << ")" << endl;
         cout << endl;
+        prevSum = sum, prevEmpty = empty, prevMaxScore = maxScore;
+        usleep(1000000);
         switch (move)
         {
         case 'u':
@@ -235,8 +312,9 @@ int main()
             cout << "Invalid move. Try again!" << endl;
             continue;
         }
-        addTile(v, n, empty);
-        printMatrix(v, n, empty);
+
+        addTile(v, n, empty, sum);
+        printMatrix(v, n, sum);
     }
     if (!flag)
     {
